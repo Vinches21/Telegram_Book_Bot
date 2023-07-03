@@ -1,7 +1,8 @@
 import os
 
-BOOK_PATH = 'book/book.txt'
-PAGE_SIZE = 1050
+
+BOOK_PATH = '/Users/oleg_polikarpov/PycharmProjects/Telegram_Book_Bot/book/book.txt'
+PAGE_SIZE = 900
 
 book: dict[int, str] = {}
 
@@ -18,7 +19,14 @@ def _get_part_text(text: str, start: int, page_size: int) -> tuple[str, int]:
 
 # Функция, формирующая словарь книги
 def prepare_book(path: str) -> None:
-    pass
+    with open(path, 'r', encoding="utf-8") as file:
+        text = file.read()
+    start, page_number = 0, 1
+    while start < len(text):
+        page_text, page_size = _get_part_text(text, start, PAGE_SIZE)
+        start += page_size
+        book[page_number] = page_text.strip()
+        page_number += 1
 
 
 # Вызов функции prepare_book для подготовки книги из текстового файла
