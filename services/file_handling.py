@@ -7,16 +7,13 @@ book: dict[int, str] = {}
 
 
 # Функция, возвращающая строку с текстом страницы и ее размер
-def _get_part_text(text: str, start: int, size: int) -> tuple[str, int]:
-    end = min(start + size, len(text))
-    for i in range(end, start, -1):
-        if text[i-1] in ",.!" and text[i] not in ",.!:?" and (text[i] == " " or "\n"):
-            break
-        else:
-            i = end
-
-    page = text[start:i].rstrip()
-    return  page, len(page)
+def _get_part_text(text: str, start: int, page_size: int) -> tuple[str, int]:
+    end_symbols = ',.!:;?'
+    if start + page_size >= len(text):
+        return text[start:], len(text) - start
+    for i in range(start + page_size - 1, start - 1, -1):
+        if text[i] in end_symbols and text[i + 1] not in end_symbols:
+            return text[start: i + 1], i - start + 1
 
 
 # Функция, формирующая словарь книги
